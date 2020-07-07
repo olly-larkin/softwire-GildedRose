@@ -14,9 +14,18 @@ describe('Gilded Rose', function () {
     });
 
     it('Quality decreases over time', function() {
-        const gildedRose = new GildedRose([ new Item('foo', 10, 10) ]);
+        const startVal = 10
+        const gildedRose = new GildedRose([ new Item('foo', 10, startVal) ]);
         const items = gildedRose.updateQuality();
-        expect(items[0].quality).lessThan(gildedRose.items[0].quality);
+        expect(items[0].quality).lessThan(startVal);
+    });
+
+    it('sellIn expiry double quality loss', function() {
+        const startVal = 10
+        const gildedRose = new GildedRose([ new Item('foo', 1, startVal) ]);
+        const quality1 = gildedRose.updateQuality()[0].quality;
+        const quality2 = gildedRose.updateQuality()[0].quality;
+        expect(2*(startVal - quality1)).to.equal(quality1 - quality2)
     });
 
 });
