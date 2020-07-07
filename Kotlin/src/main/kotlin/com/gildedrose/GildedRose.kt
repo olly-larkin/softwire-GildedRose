@@ -11,36 +11,48 @@ class GildedRose(var items: Array<Item>) {
     val SULFURAS_NAME = "Sulfuras, Hand of Ragnaros"
     val BACKSTAGE_PASS_NAME = "Backstage passes to a TAFKAL80ETC concert"
 
-    fun addQuality(item : Item, quality: Int) {
+    private fun addQuality(item : Item, con: Boolean, quality: Int) {
         // Adds quality to item, then ensures MIN_QUALITY <= item.quality <= MAX_QUALITY
-        item.quality = max(min(item.quality + quality, MAX_QUALITY), MIN_QUALITY)
+        val updatedQuality = if (con && quality < 0) quality * 2 else quality
+        item.quality = max(min(item.quality + updatedQuality, MAX_QUALITY), MIN_QUALITY)
     }
 
     fun updateQuality() {
         for (item in items) {
-            when (item.name) {
-                AGED_BRIE_NAME -> addQuality(item, 1)
+
+            val con: Boolean
+            val name: String
+            if (item.name.substring(0, 8) == "Conjured") {
+                con = true
+                name = item.name.substring(9)
+            } else {
+                con = false
+                name = item.name
+            }
+
+            when (name) {
+                AGED_BRIE_NAME -> addQuality(item, con, 1)
                 BACKSTAGE_PASS_NAME ->
                     when (item.sellIn) {
                         in Int.MIN_VALUE..0 -> item.quality = 0
-                        in 1..5 -> addQuality(item, 3)
-                        in 6..10 -> addQuality(item, 2)
-                        else -> addQuality(item, 1)
+                        in 1..5 -> addQuality(item, con, 3)
+                        in 6..10 -> addQuality(item, con, 2)
+                        else -> addQuality(item, con, 1)
                     }
                 SULFURAS_NAME -> {}
-                else -> addQuality(item, -1)
+                else -> addQuality(item, con, -1)
             }
 
-            if (item.name != SULFURAS_NAME) {
+            if (name != SULFURAS_NAME) {
                 item.sellIn = item.sellIn - 1
             }
 
             if (item.sellIn < 0) {
-                when (item.name) {
+                when (name) {
                     // According to the legacy code, aged brie increases by 2 after sellIn has passed.
-                    AGED_BRIE_NAME -> addQuality(item, 1)
+                    AGED_BRIE_NAME -> addQuality(item, con, 1)
                     SULFURAS_NAME -> {}
-                    else -> addQuality(item, -1)
+                    else -> addQuality(item, con, -1)
                 }
             }
         }
