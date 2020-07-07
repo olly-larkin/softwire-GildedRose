@@ -6,6 +6,8 @@ import org.junit.Test
 class GildedRoseTest {
 
     val aged_brie_name = "Aged Brie"
+    val sulfuras_name = "Sulfuras, Hand of Ragnaros"
+    val backstage_pass_name = "Backstage passes to a TAFKAL80ETC concert"
 
     fun GetApp(vararg items : Item): GildedRose {
         return GildedRose(arrayOf(*items))
@@ -67,6 +69,49 @@ class GildedRoseTest {
             assertTrue("Quality shouldn't reach 50 in this test", lastQuality < 50)
             app.updateQuality()
             assertTrue("Quality of $aged_brie_name should increase",
+                    app.items[0].quality > lastQuality)
+        }
+    }
+
+    @Test
+    fun quality_never_above_50() {
+        val startQuality = 49
+        val iters = 5
+        val app = GetApp(Item(aged_brie_name, 50, startQuality))
+
+        for (i in 1..iters) {
+            app.updateQuality()
+            assertTrue("Quality should be <= 50", app.items.all {it.quality <= 50})
+        }
+    }
+
+    @Test
+    fun sulfuras_never_changes() {
+        val startQuality = 25
+        val startSellin = 3
+
+        val iters = 3
+        val app = GetApp(Item(sulfuras_name, startSellin, startQuality))
+
+        for (i in 1..iters) {
+            app.updateQuality()
+            assertTrue("Sulfuras never has to be sold and never decreases in quality",
+                app.items[0].quality == startQuality &&
+                        app.items[0].sellIn == startSellin)
+        }
+    }
+
+    @Test
+    fun backstage_passes_improve() {
+        val startQuality = 10
+        val iters = 2
+        val app = GetApp(Item(backstage_pass_name, 50, startQuality))
+
+        for (i in 1..iters) {
+            val lastQuality = app.items[0].quality
+            assertTrue("Quality shouldn't reach 50 in this test", lastQuality < 50)
+            app.updateQuality()
+            assertTrue("Quality of ${app.items[0].name} should increase",
                     app.items[0].quality > lastQuality)
         }
     }
