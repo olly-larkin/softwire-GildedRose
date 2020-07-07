@@ -10,6 +10,7 @@ class GildedRose(var items: Array<Item>) {
     val AGED_BRIE_NAME = "Aged Brie"
     val SULFURAS_NAME = "Sulfuras, Hand of Ragnaros"
     val BACKSTAGE_PASS_NAME = "Backstage passes to a TAFKAL80ETC concert"
+    val CONJURED_NAME = "Conjured "
 
     private fun addQuality(item : Item, con: Boolean, quality: Int) {
         // Adds quality to item, then ensures MIN_QUALITY <= item.quality <= MAX_QUALITY
@@ -22,9 +23,9 @@ class GildedRose(var items: Array<Item>) {
 
             val con: Boolean
             val name: String
-            if (item.name.substring(0, 8) == "Conjured") {
+            if (item.name.contains(CONJURED_NAME)) {
                 con = true
-                name = item.name.substring(9)
+                name = item.name.substring(CONJURED_NAME.length)
             } else {
                 con = false
                 name = item.name
