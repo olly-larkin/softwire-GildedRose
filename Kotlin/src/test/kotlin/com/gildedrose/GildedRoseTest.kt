@@ -133,6 +133,24 @@ class GildedRoseTest {
     }
 
     @Test
+    fun conjured_items_degrade_faster() {
+        val startQuality = 10
+        // Only want degrading itemNames
+        for (itemName in arrayOf("foo", sulfuras_name)) {
+            val app = GetApp(
+                    Item("Conjured $itemName", 10, startQuality),
+                    Item(itemName, 10, startQuality)
+            )
+
+            app.updateQuality()
+            val diffConjured = startQuality - app.items[0].quality
+            val diffNormal = startQuality - app.items[1].quality
+            assertTrue("Conjured items should degrade twice as fast as normal items",
+                    diffConjured == 2 * diffNormal)
+        }
+    }
+
+    @Test
     fun test_same_as_legacy() {
         // Want to test that backstage, brie, and other items `foo` all behave the same
         // NOT TESTING "conjured" -- Doesn't exist in legacy code!!
