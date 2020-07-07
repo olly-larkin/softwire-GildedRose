@@ -22,8 +22,8 @@ class GildedRose(var items: Array<Item>) {
                 AGED_BRIE_NAME -> addQuality(item, 1)
                 BACKSTAGE_PASS_NAME ->
                     when (item.sellIn) {
-                        in Int.MIN_VALUE..-1 -> item.quality = 0
-                        in 0..5 -> addQuality(item, 3)
+                        in Int.MIN_VALUE..0 -> item.quality = 0
+                        in 1..5 -> addQuality(item, 3)
                         in 6..10 -> addQuality(item, 2)
                         else -> addQuality(item, 1)
                     }

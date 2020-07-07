@@ -116,6 +116,21 @@ class GildedRoseTest {
         }
     }
 
+    @Test
+    fun backstage_passes_improve_more() {
+        val startQuality = 10
+        val app = GetApp(Item(backstage_pass_name, 10, startQuality),
+                Item(backstage_pass_name, 5, startQuality),
+                Item(backstage_pass_name, 0, startQuality))
+        app.updateQuality()
+        assertTrue("Quality of $backstage_pass_name should increase by 2 with <=10 days left",
+                app.items[0].quality == startQuality + 2)
+        assertTrue("Quality of $backstage_pass_name should increase by 3 with <=10 days left",
+                app.items[1].quality == startQuality + 3)
+        assertTrue("Quality of $backstage_pass_name should drop to 0 after concert",
+                app.items[2].quality == 0)
+    }
+
 }
 
 
