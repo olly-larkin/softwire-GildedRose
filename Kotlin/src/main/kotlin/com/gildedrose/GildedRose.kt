@@ -23,7 +23,7 @@ class GildedRose(var items: Array<Item>) {
 
             val con: Boolean
             val name: String
-            if (item.name.contains(CONJURED_NAME)) {
+            if (item.name.startsWith(CONJURED_NAME)) {
                 con = true
                 name = item.name.substring(CONJURED_NAME.length)
             } else {
